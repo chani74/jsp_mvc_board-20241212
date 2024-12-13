@@ -74,6 +74,8 @@ public class BoardController extends HttpServlet{
 			BoardDto bDto = boardDao.content_view(bnum);
 			request.setAttribute("boardDto", bDto);
 			viewPage="content_view.jsp";
+		} else if(com.equals("/delete.do")) {
+			
 		}
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(viewPage);
