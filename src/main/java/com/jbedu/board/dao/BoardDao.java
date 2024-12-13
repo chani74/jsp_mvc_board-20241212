@@ -114,4 +114,66 @@ public class BoardDao {
 		
 	}
 	
+	public BoardDto content_view(String cbnum) { //게시판 글 목록에서 클릭한 글 내용 가져오기
+		
+		String sql = "SELECT * FROM mvc_board WHERE bnum=?";//클릭한 글 번호로 검색하여 글 가져오기
+		
+		String driverName = "com.mysql.jdbc.Driver";
+		String url = "jdbc:mysql://localhost:3306/jsp_project";
+		String username = "root";
+		String password = "12345";
+		
+		Connection conn= null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;	
+		BoardDto bDto = new BoardDto();
+		
+		try {
+			Class.forName(driverName);
+			conn = DriverManager.getConnection(url, username, password);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, cbnum);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {//클릭한 번호의 글이 존재하면 true, 존재하지 않으면 false
+				int bnum = rs.getInt("bnum");
+				String bname = rs.getString("bname");
+				String btitle = rs.getString("btitle");
+				String bcontent = rs.getString("bcontent");
+				Timestamp bdate = rs.getTimestamp("bdate");
+				int bhit = rs.getInt("bhit");
+				
+				bDto.setBnum(bnum);
+				bDto.setBname(bname);
+				bDto.setBtitle(btitle);
+				bDto.setBcontent(bcontent);
+				bDto.setBdate(bdate);
+				bDto.setBhit(bhit);
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		} finally {
+			try {
+				if (rs != null ) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+				
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return bDto;//클릭한 글 번호를 인수로 넣어서 호출하면 그 글의 내용이 담긴 DTO가 반환됨
+	}
+	
 }
