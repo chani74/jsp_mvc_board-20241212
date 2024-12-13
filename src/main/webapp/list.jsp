@@ -32,8 +32,11 @@
 			<td>${bDto.bhit }</td>
 		</tr>
 		</c:forEach>
-	
-	
+		<tr>
+			<td colspan="5" align="right">
+				<input type="button" value="글쓰기" onclick="location.href='write_form.do'">
+			</td>
+		</tr>
 	</table> 
 	
 	
