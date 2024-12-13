@@ -75,8 +75,26 @@ public class BoardController extends HttpServlet{
 			request.setAttribute("boardDto", bDto);
 			viewPage="content_view.jsp";
 		} else if(com.equals("/delete.do")) {
+			String bnum = request.getParameter("bnum");//유저가 삭제를 원하는 글의 번호
+			BoardDao boardDao = new BoardDao();
+			boardDao.board_delete(bnum);
+			viewPage="list.do";//주의!! list.jsp X list.do O
+		} else if(com.equals("/modify_form.do")) {
+			String bnum = request.getParameter("bnum");//유저가 삭제를 원하는 글의 번호
+			BoardDao boardDao = new BoardDao();
+			BoardDto bDto = boardDao.content_view(bnum);
+			request.setAttribute("boardDto", bDto);
+			viewPage="modify_form.jsp";
+		} else if(com.equals("/modify.do")) {
+			String bnum = request.getParameter("bnum");//유저가 수정을 원하는 글의 번호
+			String bname = request.getParameter("bname");
+			String btitle = request.getParameter("btitle");
+			String bcontent = request.getParameter("bcontent");
+			BoardDao boardDao = new BoardDao();
+			boardDao.board_modify(bnum, bname, btitle, bcontent);
 			
-		}
+			viewPage="list.do";
+		} 
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(viewPage);
 		dispatcher.forward(request, response);

@@ -15,7 +15,6 @@
 		내용 : <textarea rows="10" cols="50" name="bcontent"></textarea><br><br>
 		<input type="submit" value="글쓰기">
 		<input type="button" value="취소" onclick="location.href='list.do'">
-	
 	</form>
 </body>
 </html>
