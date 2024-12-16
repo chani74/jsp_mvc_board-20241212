@@ -3,9 +3,12 @@ package com.jbedu.board.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.jbedu.board.command.BCommand;
 import com.jbedu.board.command.BContentCommand;
 import com.jbedu.board.command.BDeleteCommand;
 import com.jbedu.board.command.BListCommand;
+import com.jbedu.board.command.BModifyCommand;
+import com.jbedu.board.command.BModifyFormCommand;
 import com.jbedu.board.command.BWriteCommand;
 import com.jbedu.board.dao.BoardDao;
 import com.jbedu.board.dto.BoardDto;
@@ -45,6 +48,7 @@ public class BoardController extends HttpServlet{
 		request.setCharacterEncoding("utf-8");
 		
 		String viewPage = null; //글 목록 페이지 파일 이름
+		BCommand command = null; //부모 인터페이스로 초기값으로 null로 지정한 객체 선언
 		
 		String uri = request.getRequestURI();///jsp_mvc_board-20241212/list.jsp
 		String conPath = request.getContextPath();///jsp_mvc_board-20241212
@@ -55,41 +59,35 @@ public class BoardController extends HttpServlet{
 		//System.out.println(com);
 		
 		if(com.equals("/list.do")) {
-			BListCommand command = new BListCommand();
+			command = new BListCommand();
 			command.execute(request, response);
 			
 			viewPage="list.jsp";
 		} else if(com.equals("/write_form.do")) {
 			viewPage="write_form.jsp";
 		} else if(com.equals("/write.do")) {
-			BWriteCommand command = new BWriteCommand();
+			command = new BWriteCommand();
 			command.execute(request, response);
 			
 			viewPage="list.do";//주의!! list.jsp X list.do O
 		} else if(com.equals("/content_view.do")) {
-			BContentCommand command = new BContentCommand();
+			command = new BContentCommand();
 			command.execute(request, response);
 			
 			viewPage="content_view.jsp";
 		} else if(com.equals("/delete.do")) {
-			BDeleteCommand command = new BDeleteCommand();
+			command = new BDeleteCommand();
 			command.execute(request, response);
 			
 			viewPage="list.do";//주의!! list.jsp X list.do O
 		} else if(com.equals("/modify_form.do")) {
-			String bnum = request.getParameter("bnum");//유저가 삭제를 원하는 글의 번호
-			String modifyFlag = request.getParameter("modify");
-			BoardDao boardDao = new BoardDao();
-			BoardDto bDto = boardDao.content_view(bnum);
-			request.setAttribute("boardDto", bDto);
+			command = new BModifyFormCommand();
+			command.execute(request, response);
+			
 			viewPage="modify_form.jsp";
 		} else if(com.equals("/modify.do")) {
-			String bnum = request.getParameter("bnum");//유저가 수정을 원하는 글의 번호
-			String bname = request.getParameter("bname");
-			String btitle = request.getParameter("btitle");
-			String bcontent = request.getParameter("bcontent");
-			BoardDao boardDao = new BoardDao();
-			boardDao.board_modify(bnum, bname, btitle, bcontent);
+			command = new BModifyCommand();
+			command.execute(request, response);
 			
 			viewPage="list.do";
 		} 
